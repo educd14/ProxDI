@@ -204,10 +204,10 @@ def selectTablaClientes():
         datos = cursor.fetchall()
         return datos
     except conn.OperationalError as err:
-        print("Error "+err)
+        print(err)
 
     except conn.DatabaseError as err2:
-        print("Error"+err2)
+        print(err2)
 
     finally:
         cursor.close()
@@ -283,13 +283,13 @@ def selectTablaProductos():
     try:
         conn = connect()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM productos")
+        cursor.execute("SELECT * FROM produtos")
         datos = cursor.fetchall()
         return datos
     except conn.OperationalError as err:
-        print("Error "+err)
+        print(err)
     except conn.DatabaseError as err2:
-        print("Error"+err2)
+        print(err2)
     finally:
         cursor.close()
         disconnect(conn)

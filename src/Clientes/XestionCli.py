@@ -1,6 +1,7 @@
 import gi
 
 from src import Entrada
+from src.SqliteBD import MethodsBD
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -14,50 +15,36 @@ class Fiestra(Gtk.Window):
 
         boxV = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self.modelo = Gtk.ListStore(str, str, str, str, str, str)
-        self.modelo.append(["53242337F", "Alfredo", "Dominguez", "M", "986172748", "Garcia Barbon"])
-        self.modelo.append(["93758295N", "Maria", "Garzon", "F", "986352378", "Zaragoza"])
-        self.modelo.append(["58394052G", "Eugenia", "Val", "F", "986642347", "Valencia"])
-        self.modelo.append(["28503758L", "Eduardo", "Collazo", "M", "986152764", "Pintor Colmeiro"])
+        #Refrescamos tabla clientes
+        """TABLA CLIENTES"""
+
+        self.columnasC = ["DNI", "Nome", "Apelido", "Sexo", "Telefono", "Direccion"]
+        self.modeloC = Gtk.ListStore(str, str, str, str, str, str)
+        self.clientes = []
+        self.vista = Gtk.TreeView(model=self.modeloC)
+        self.vista.set_hexpand(True)
+        self.vista.set_vexpand(True)
+        seleccion = self.vista.get_selection()
+        seleccion.connect("changed", self.on_vista_changed)
+
+        clientesBD = MethodsBD.selectTablaClientes()
+        for cliente in clientesBD:
+            self.clientes.append(
+                [cliente[0], cliente[1], cliente[2], cliente[3], cliente[4], cliente[5]])
+
+        for elemento in self.clientes:
+            self.modeloC.append(elemento)
+
+        for i in range(len(self.columnasC)):
+            celda = Gtk.CellRendererText()
+            celda.set_alignment(0.5, 0)
+            self.columna = Gtk.TreeViewColumn(self.columnasC[i], celda, text=i)
+            self.columna.set_alignment(0.5)
+            self.columna.set_expand(True)
+            self.vista.append_column(self.columna)
 
 
-
-        vista = Gtk.TreeView(model=self.modelo)
-        vista.set_hexpand(True)
-        vista.set_vexpand(True)
-        boxV.pack_start(vista, True, True, 0)
-
-        celdaDNI = Gtk.CellRendererText()
-        celdaDNI.set_property("editable", False)
-
-        columnaDNI = Gtk.TreeViewColumn('DNI', celdaDNI, text=0)
-        celdaNome = Gtk.CellRendererText()
-        celdaNome.set_property("editable", False)
-
-        columnaNome = Gtk.TreeViewColumn('Nome', celdaNome, text=1)
-        celdaApelido = Gtk.CellRendererText()
-        celdaApelido.set_property("editable", False)
-        columnaApelido = Gtk.TreeViewColumn('Apelido', celdaApelido, text=2)
-
-        celdaSexo = Gtk.CellRendererText()
-        celdaSexo.set_property("editable", False)
-        columnaSexo = Gtk.TreeViewColumn('Sexo', celdaSexo, text=3)
-
-
-        celdaTelefono = Gtk.CellRendererText()
-        celdaTelefono.set_property("editable", False)
-        columnaTelefono = Gtk.TreeViewColumn('Telefono', celdaTelefono, text=4)
-
-        celdaDireccion = Gtk.CellRendererText()
-        celdaDireccion.set_property("editable", False)
-        columnaDireccion = Gtk.TreeViewColumn('Dirección', celdaDireccion, text=5)
-
-        vista.append_column(columnaDNI)
-        vista.append_column(columnaNome)
-        vista.append_column(columnaApelido)
-        vista.append_column(columnaSexo)
-        vista.append_column(columnaTelefono)
-        vista.append_column(columnaDireccion)
+        boxV.pack_start(self.vista, True, True, 0)
 
 
         grid = Gtk.Grid(column_homogeneous=True,
@@ -81,9 +68,9 @@ class Fiestra(Gtk.Window):
         self.btnVolver = Gtk.Button(label="Volver")
         self.cmbAccion = Gtk.ComboBox()
         acciones = Gtk.ListStore(int,str)
-        acciones.append([1,"Añadir"])
-        acciones.append([2,"Modificar"])
-        acciones.append([3,"Eliminar"])
+        acciones.append([0,"Añadir"])
+        acciones.append([1,"Modificar"])
+        acciones.append([2,"Eliminar"])
         self.cmbAccion.set_model(acciones)
         celdaTexto = Gtk.CellRendererText()
         self.cmbAccion.pack_start(celdaTexto,True)
@@ -116,6 +103,7 @@ class Fiestra(Gtk.Window):
 
         #Señales
         self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
+        self.btnAplicar.connect("clicked", self.on_btnAplicar_clicked)
 
         # Volver al inicio
 
@@ -126,6 +114,46 @@ class Fiestra(Gtk.Window):
         """
         Entrada.VentanaPrincipal().vEntrada.show_all()
         self.set_visible(False)
+
+    def on_vista_changed(self, seleccion):
+        (modelo, punteiro) = seleccion.get_selected()
+
+        if punteiro is not None:
+
+            self.txtDni.set_text(modelo[punteiro][0])
+            self.txtNome.set_text(modelo[punteiro][1])
+            self.txtApelido.set_text(modelo[punteiro][2])
+            self.txtSexo.set_text((modelo[punteiro][3]))
+            self.txtDireccion.set_text((modelo[punteiro][4]))
+            self.txtTelefono.set_text((modelo[punteiro][5]))
+
+    def on_btnAplicar_clicked(self, boton):
+        modAcc = self.cmbAccion.get_model()
+        indice = self.cmbAccion.get_active_iter()
+
+        if modAcc[indice][0] == 0:
+            """Añadir"""
+        elif modAcc[indice][0] == 1:
+            """Modificar"""
+        elif modAcc[indice][0] == 2:
+            MethodsBD.deleteTablaClientes(self.txtDni.get_text())
+            dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "Cliente Eliminado Correctamente")
+            dialog.run()
+            dialog.destroy()
+            self.tablaClienteRefresh()
+
+    def tablaClienteRefresh(self):
+
+        self.modeloC.clear()
+        self.clientes2 = []
+        clientesBD = MethodsBD.selectTablaClientes()
+        for cliente in clientesBD:
+            self.clientes2.append(
+                [cliente[0], cliente[1], cliente[2], cliente[3], cliente[4], cliente[5]])
+
+        for elemento in self.clientes2:
+            self.modeloC.append(elemento)
 
 if __name__ == "__main__":
     Fiestra()

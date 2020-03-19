@@ -1,6 +1,7 @@
 import gi
 
 from src import Entrada
+from src.SqliteBD import MethodsBD
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -19,39 +20,43 @@ class Fiestra(Gtk.Window):
 
         boxV = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        self.modelo = Gtk.ListStore(int,str,int,bool)
-        self.modelo.append([1, 'Pantalla LED 20"', 119.99,False])
-        self.modelo.append([2, "Nvidia 1060 GTX", 156.95,False])
-        self.modelo.append([3, "Teclado Corsair", 34.99,False])
-        self.modelo.append([4, "SDD Seagate", 54.99,False])
+        """TABLA PRODUTOS"""
 
+        self.columnasP = ["ID", "Produto", "Precio(€)",""]
+        self.modeloP = Gtk.ListStore(int, str, int,bool)
+        self.produtos = []
+        self.vista = Gtk.TreeView(model=self.modeloP)
+        self.vista.set_hexpand(True)
+        self.vista.set_vexpand(True)
+        seleccion = self.vista.get_selection()
+        seleccion.connect("changed", self.on_vista_changed)
 
+        produtosBD = MethodsBD.selectTablaProductos()
+        for produto in produtosBD:
+            self.produtos.append(
+                [produto[0], produto[1], produto[2], False])
 
-        vista = Gtk.TreeView(model=self.modelo)
-        vista.set_hexpand(True)
-        vista.set_vexpand(True)
-        boxV.pack_start(vista, True, True, 0)
+        for elemento in self.produtos:
+            self.modeloP.append(elemento)
 
-        celdaID = Gtk.CellRendererText()
-        celdaID.set_property("editable", False)
+        for i in range(len(self.columnasP)):
+            if i == 3:
 
-        columnaID = Gtk.TreeViewColumn('ID', celdaID, text=0)
-        celdaProduto = Gtk.CellRendererText()
-        celdaProduto.set_property("editable", False)
+                celda = Gtk.CellRendererToggle()
+                celda.set_alignment(0.5, 0)
+                self.columna = Gtk.TreeViewColumn(self.columnasP[i], celda, active=i)
+                self.columna.set_alignment(0.5)
+                self.columna.set_expand(True)
+                self.vista.append_column(self.columna)
+            else:
+                celda = Gtk.CellRendererText()
+                celda.set_alignment(0.5, 0)
+                self.columna = Gtk.TreeViewColumn(self.columnasP[i], celda, text=i)
+                self.columna.set_alignment(0.5)
+                self.columna.set_expand(True)
+                self.vista.append_column(self.columna)
 
-        columnaProduto = Gtk.TreeViewColumn('Produto', celdaProduto, text=1)
-        celdaPrecio = Gtk.CellRendererText()
-        celdaPrecio.set_property("editable", False)
-        columnaPrecio = Gtk.TreeViewColumn('Precio(€)', celdaPrecio, text=2)
-
-        celdaSeleccion = Gtk.CellRendererToggle()
-        columnaSeleccion = Gtk.TreeViewColumn("",celdaSeleccion, active=3)
-
-
-        vista.append_column(columnaID)
-        vista.append_column(columnaProduto)
-        vista.append_column(columnaPrecio)
-        vista.append_column(columnaSeleccion)
+        boxV.pack_start(self.vista, True, True, 0)
 
 
         grid = Gtk.Grid(column_homogeneous=True,
@@ -67,9 +72,9 @@ class Fiestra(Gtk.Window):
         self.btnAplicar = Gtk.Button(label = "Aplicar")
         self.cmbAccion = Gtk.ComboBox()
         acciones = Gtk.ListStore(int,str)
-        acciones.append([1,"Añadir"])
-        acciones.append([2,"Modificar"])
-        acciones.append([3,"Eliminar"])
+        acciones.append([0,"Añadir"])
+        acciones.append([1,"Modificar"])
+        acciones.append([2,"Eliminar"])
         self.cmbAccion.set_model(acciones)
         celdaTexto = Gtk.CellRendererText()
         self.cmbAccion.pack_start(celdaTexto,True)
@@ -129,6 +134,7 @@ class Fiestra(Gtk.Window):
         # Señales
         self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
         self.btnVolver2.connect("clicked", self.on_btnVolver_clicked)
+        self.btnAplicar.connect("clicked", self.on_btnAplicar_clicked)
 
         # Volver al inicio
 
@@ -139,6 +145,43 @@ class Fiestra(Gtk.Window):
         """
         Entrada.VentanaPrincipal().vEntrada.show_all()
         self.set_visible(False)
+
+    def on_vista_changed(self, seleccion):
+        (modelo, punteiro) = seleccion.get_selected()
+
+        if punteiro is not None:
+
+            self.txtID.set_text(str(modelo[punteiro][0]))
+            self.txtProduto.set_text(modelo[punteiro][1])
+            self.txtPrecio.set_text(str(modelo[punteiro][2]))
+
+    def on_btnAplicar_clicked(self, boton):
+        modAcc = self.cmbAccion.get_model()
+        indice = self.cmbAccion.get_active_iter()
+
+        if modAcc[indice][0] == 0:
+            """Añadir"""
+        elif modAcc[indice][0] == 1:
+            """Modificar"""
+        elif modAcc[indice][0] == 2:
+            MethodsBD.deleteTablaProductos(self.txtID.get_text())
+            dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "Produto Eliminado Correctamente")
+            dialog.run()
+            dialog.destroy()
+            self.tablaProdutoRefresh()
+
+    def tablaProdutoRefresh(self):
+
+        self.modeloP.clear()
+        self.produtos2 = []
+        produtosBD = MethodsBD.selectTablaProductos()
+        for produto in produtosBD:
+            self.produtos2.append(
+                [produto[0], produto[1], produto[2], False])
+
+        for elemento in self.produtos2:
+            self.modeloP.append(elemento)
 
 if __name__ == "__main__":
     Fiestra()
