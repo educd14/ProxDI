@@ -1,14 +1,21 @@
 import gi
+
+from src.SqliteBD import MethodsBD
+
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 
 class VentanaPrincipal():
     def __init__(self):
+        #Creación tablas BD
+        MethodsBD.tablas()
+
         builder = Gtk.Builder()
         #Asignamos a nuestro builder el archivo de nuestro proyecto Glade
         builder.add_from_file("formEntrada.glade")
 
         vEntrada = builder.get_object("vEntrada")
+        vEntrada.set_default_size(200, 150)
 
         self.btnClientes = builder.get_object("btnClientes")
         self.btnProdutos = builder.get_object("btnProdutos")
