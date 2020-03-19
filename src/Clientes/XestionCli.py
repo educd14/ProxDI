@@ -1,5 +1,7 @@
 import gi
 
+from src import Entrada
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
@@ -76,6 +78,7 @@ class Fiestra(Gtk.Window):
         self.txtDireccion = Gtk.Entry()
         self.btnAplicar = Gtk.Button(label = "Aplicar")
         self.btnGuardar = Gtk.Button(label="Guardar clientes en PDF")
+        self.btnVolver = Gtk.Button(label="Volver")
         self.cmbAccion = Gtk.ComboBox()
         acciones = Gtk.ListStore(int,str)
         acciones.append([1,"Añadir"])
@@ -101,7 +104,8 @@ class Fiestra(Gtk.Window):
         grid.attach(self.txtDireccion, 2, 3, 1, 1)
         grid.attach(self.cmbAccion,1,4,1,1)
         grid.attach(self.btnAplicar,2,5,1,1)
-        grid.attach(self.btnGuardar,0,5,1,1)
+        grid.attach(self.btnGuardar,0,5,1,2)
+        grid.attach(self.btnVolver,1,5,1,1)
 
 
         boxV.pack_start(grid, True, True, 10)
@@ -109,6 +113,19 @@ class Fiestra(Gtk.Window):
         self.add(boxV)
         self.show_all()
         self.connect("destroy", Gtk.main_quit)
+
+        #Señales
+        self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
+
+        # Volver al inicio
+
+    def on_btnVolver_clicked(self, boton):
+        """Metodo que vuelve al formulario de inicio.
+                :param widget: boton
+                :return: No devuelve ningún parámetro.
+        """
+        Entrada.VentanaPrincipal().vEntrada.show_all()
+        self.set_visible(False)
 
 if __name__ == "__main__":
     Fiestra()

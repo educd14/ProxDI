@@ -1,5 +1,7 @@
 import gi
 
+from src import Entrada
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
@@ -12,6 +14,8 @@ class Fiestra(Gtk.Window):
 
         self.notebook = Gtk.Notebook();
         self.add(self.notebook)
+
+        #Notebook1 - PRODUTOS
 
         boxV = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
@@ -71,6 +75,7 @@ class Fiestra(Gtk.Window):
         self.cmbAccion.pack_start(celdaTexto,True)
         self.cmbAccion.add_attribute(celdaTexto, "text", 1)
         self.cmbAccion.set_active(0)
+        self.btnVolver = Gtk.Button(label = "Volver")
 
         grid.add(self.lblID)
         grid.attach(self.txtID,0,1,1,1)
@@ -80,6 +85,10 @@ class Fiestra(Gtk.Window):
         grid.attach(self.txtPrecio, 2, 1, 1, 1)
         grid.attach(self.cmbAccion,1,4,1,1)
         grid.attach(self.btnAplicar,2,5,1,1)
+        grid.attach(self.btnVolver,0,5,1,1)
+
+
+        #Notebook2 - SERVIZO
 
         gridS = Gtk.Grid(column_homogeneous=True,
                          column_spacing=10,
@@ -97,12 +106,14 @@ class Fiestra(Gtk.Window):
         self.vista2 = Gtk.TreeView(model=self.modelo2)
         self.vista2.set_hexpand(True)
         self. vista2.set_vexpand(True)
+        self.btnVolver2 = Gtk.Button(label = "Volver")
 
         gridS.attach(self.lblServizo,1,1,2,1)
         gridS.attach(self.vista2,1,2,2,1)
         gridS.attach(self.lblFactura,1,3,2,1)
         gridS.attach(self.cmbCliente, 1, 5, 1, 1)
         gridS.attach_next_to(self.btnFactura, self.cmbCliente, Gtk.PositionType.RIGHT, 1, 1)
+        gridS.attach(self.btnVolver2,1,6,2,2)
 
 
 
@@ -111,9 +122,23 @@ class Fiestra(Gtk.Window):
         self.notebook.append_page(boxV, Gtk.Label("Produtos"))
         self.notebook.append_page(gridS, Gtk.Label("Servizo"))
 
-        
+
         self.show_all()
         self.connect("destroy", Gtk.main_quit)
+
+        # Señales
+        self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
+        self.btnVolver2.connect("clicked", self.on_btnVolver_clicked)
+
+        # Volver al inicio
+
+    def on_btnVolver_clicked(self, boton):
+        """Metodo que vuelve al formulario de inicio.
+                :param widget: boton
+                :return: No devuelve ningún parámetro.
+        """
+        Entrada.VentanaPrincipal().vEntrada.show_all()
+        self.set_visible(False)
 
 if __name__ == "__main__":
     Fiestra()

@@ -38,7 +38,7 @@ def query(conn, query):
         c.execute(query)
         conn.commit()
     except Error as e:
-        print(e)
+        print()
 
 
 def insertTablaClientes(dni, nome, apelido, sexo, telefono, direccion):
