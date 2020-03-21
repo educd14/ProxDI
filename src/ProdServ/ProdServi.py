@@ -43,6 +43,7 @@ class Fiestra(Gtk.Window):
             if i == 3:
 
                 celda = Gtk.CellRendererToggle()
+                celda.connect("toggled", self.on_celdaCheck_toggled, self.modeloP)
                 celda.set_alignment(0.5, 0)
                 self.columna = Gtk.TreeViewColumn(self.columnasP[i], celda, active=i)
                 self.columna.set_alignment(0.5)
@@ -99,19 +100,41 @@ class Fiestra(Gtk.Window):
                          column_spacing=10,
                          row_spacing=10)
         self.lblServizo = Gtk.Label("FACTURA")
-        self.lblFactura = Gtk.Label("Seleccione o cliente o que quere facer a factura")
-        self.cmbCliente = Gtk.ComboBox()
-        self.cmbCliente.set_model(acciones)
-        celdaTexto = Gtk.CellRendererText()
-        self.cmbCliente.pack_start(celdaTexto, True)
-        self.cmbCliente.add_attribute(celdaTexto, "text", 1)
-        self.cmbCliente.set_active(0)
+        self.lblFactura = Gtk.Label("Seleccione os produtos na pestaña de produtos e logo o cliente o que quere facer a factura")
         self.btnFactura = Gtk.Button(label="Factura")
+        self.btnVolver2 = Gtk.Button(label = "Volver")
+
+        #COMBO PARA LA FACTURA RECOGE DNI
+        self.cmbCliente = Gtk.ComboBox()
+        cli = Gtk.ListStore(str)
+        datos = MethodsBD.selectTablaClientes()
+        self.clientes = []
+
+        for clientes in datos:
+            cli.append([clientes[0]])
+
+        self.cmbCliente.set_model(cli)
+        celdaTexto = Gtk.CellRendererText()
+        self.cmbCliente.pack_start(celdaTexto,True)
+        self.cmbCliente.add_attribute(celdaTexto, "text", 0)
+        self.cmbCliente.set_active(0)
+
+        #VISTA DE PRODUCTOS PARA LA FACTURA
+
+        self.columnasP2 = ["ID", "Produto", "Precio(€)"]
         self.modelo2 = Gtk.ListStore(int, str, int)
         self.vista2 = Gtk.TreeView(model=self.modelo2)
         self.vista2.set_hexpand(True)
         self. vista2.set_vexpand(True)
-        self.btnVolver2 = Gtk.Button(label = "Volver")
+
+        for i in range(len(self.columnasP2)):
+                celda2 = Gtk.CellRendererText()
+                celda2.set_alignment(0.5, 0)
+                self.columna2 = Gtk.TreeViewColumn(self.columnasP2[i], celda2, text=i)
+                self.columna2.set_alignment(0.5)
+                self.columna2.set_expand(True)
+                self.vista2.append_column(self.columna2)
+
 
         gridS.attach(self.lblServizo,1,1,2,1)
         gridS.attach(self.vista2,1,2,2,1)
@@ -160,10 +183,81 @@ class Fiestra(Gtk.Window):
         indice = self.cmbAccion.get_active_iter()
 
         if modAcc[indice][0] == 0:
-            """Añadir"""
+
+            # OPCION AÑADIR
+
+            if (self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
+                MethodsBD.insertTablaProdutos(int(self.txtID.get_text()),self.txtProduto.get_text(),int(self.txtPrecio.get_text()))
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                           "Produto añadido Correctamente")
+                dialog.run()
+                dialog.destroy()
+                self.tablaProdutoRefresh()
+
+
+            elif (self.txtID.get_text().isdigit() == False):
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce unha ID válida")
+                dialog.run()
+                dialog.destroy()
+
+            elif (self.txtProduto.get_text() == ""):
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce un nome válido")
+                dialog.run()
+                dialog.destroy()
+            else:
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce un precio válido")
+                dialog.run()
+                dialog.destroy()
+
         elif modAcc[indice][0] == 1:
-            """Modificar"""
+
+            # OPCION MODIFICAR
+
+
+            if (self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
+                MethodsBD.updateTablaProdutos(int(self.txtID.get_text()),self.txtProduto.get_text(),int(self.txtPrecio.get_text()))
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                           "Produto modificado Correctamente")
+                dialog.run()
+                dialog.destroy()
+                self.tablaProdutoRefresh()
+
+
+            elif (self.txtID.get_text().isdigit() == False):
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce unha ID válida")
+                dialog.run()
+                dialog.destroy()
+
+            elif (self.txtProduto.get_text() == ""):
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce un nome válido")
+                dialog.run()
+                dialog.destroy()
+            else:
+
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
+
+                                           "Introduce un precio válido")
+                dialog.run()
+                dialog.destroy()
         elif modAcc[indice][0] == 2:
+
+            #OPCION ELIMINAR
+
             MethodsBD.deleteTablaProductos(self.txtID.get_text())
             dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                        "Produto Eliminado Correctamente")
@@ -174,14 +268,29 @@ class Fiestra(Gtk.Window):
     def tablaProdutoRefresh(self):
 
         self.modeloP.clear()
-        self.produtos2 = []
+        self.produtos = []
         produtosBD = MethodsBD.selectTablaProductos()
         for produto in produtosBD:
-            self.produtos2.append(
+            self.produtos.append(
                 [produto[0], produto[1], produto[2], False])
 
-        for elemento in self.produtos2:
+        for elemento in self.produtos:
             self.modeloP.append(elemento)
+
+    def on_celdaCheck_toggled(self, control, fila, modelo):
+        modelo[fila][3] = not modelo[fila][3]
+        self.listaFactura()
+
+
+    def listaFactura(self):
+        self.modelo2.clear()
+        self.produtos2 = []
+        for produto in self.modeloP:
+            if produto[3] == True:
+                self.produtos2.append(
+                    [produto[0], produto[1], produto[2]])
+        for elemento in self.produtos2:
+            self.modelo2.append(elemento)
 
 if __name__ == "__main__":
     Fiestra()

@@ -66,10 +66,10 @@ def insertTablaClientes(dni, nome, apelido, sexo, telefono, direccion):
             conn.commit()
 
         except conn.OperationalError as e:
-            print("Error "+e)
+            print("Error")
 
         except conn.DatabaseError as e2:
-            print("Error"+e2)
+            print("El DNI del cliente ya existe en la base de datos")
 
         finally:
             cursor.close()
@@ -98,10 +98,10 @@ def insertTablaProdutos(id, produto, precio):
             conn.commit()
 
         except conn.OperationalError as e:
-            print("Error "+e)
+            print(e)
 
         except conn.DatabaseError as e2:
-            print("Error"+e2)
+            print("La ID del produto ya existe")
         finally:
             cursor.close()
             disconnect(conn)
@@ -123,14 +123,47 @@ def deleteTablaProductos(id):
         print("Eliminado")
 
     except conn.OperationalError as err:
-        print("Error "+err)
+        print(err)
 
     except conn.DatabaseError as err2:
-        print("Error"+err2)
+        print(err2)
 
     finally:
         cursor.close()
         disconnect(conn)
+
+def updateTablaProdutos(id, produto, precio):
+    """Modifica los datos de un produto existente dado la clave primaria ID.
+    :param id: id
+    :param produto: produto
+    :param precio: precio
+    :return: No devuelve ningún parámetro.
+    """
+    if (id != "" and produto != "" and precio != ""):
+
+        conn = connect()
+        cursor = conn.cursor()
+        try:
+
+            sql = "UPDATE produtos SET produto = ?, precio = ? where id = ?"
+            parametros = (produto, precio, id)
+
+            cursor.execute(sql, parametros)
+
+            conn.commit()
+
+        except conn.OperationalError as e:
+            print(e)
+
+        except conn.DatabaseError as e2:
+            print(e2)
+
+        finally:
+            cursor.close()
+            disconnect(conn)
+    else:
+        print("Faltan valores para modificar el cliente")
+
 
 
 def updateTablaClientes(dni, nome, apelido, sexo, telefono, direccion):
