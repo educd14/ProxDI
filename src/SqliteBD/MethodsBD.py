@@ -248,7 +248,7 @@ def selectTablaClientes():
 
 
 def selectTablaClientesDni(dni):
-    """Consulta de clientes a través del DNI.
+    """Consulta de cliente a través del DNI.
     :param dni: DNI del cliente que se quiere encontrar.
     :return: Lista de datos del cliente.
     """
@@ -268,44 +268,6 @@ def selectTablaClientesDni(dni):
         cursor.close()
         disconnect(conn)
 
-
-def selectTablaClientesDni2():
-    """Consulta de todos los DNI de los clientes.
-    :param: Ningún parámetro recibido.
-    :return: Lista DNI de clientes.
-    """
-    try:
-        conn = connect()
-        cursor = conn.cursor()
-        cursor.execute("SELECT dni FROM clientes")
-        datos = cursor.fetchall()
-        return datos
-    except conn.OperationalError as err:
-        print("Error ")
-    except conn.DatabaseError as err2:
-        print("Error")
-    finally:
-        cursor.close()
-        disconnect(conn)
-
-def selectTablaClientesNome():
-    """Consulta de todos los nome de los clientes.
-    :param: Ningún parámetro recibido.
-    :return: Lista nome de clientes.
-    """
-    try:
-        conn = connect()
-        cursor = conn.cursor()
-        cursor.execute("SELECT nome FROM clientes")
-        datos = cursor.fetchall()
-        return datos
-    except conn.OperationalError as err:
-        print("Error ")
-    except conn.DatabaseError as err2:
-        print("Error")
-    finally:
-        cursor.close()
-        disconnect(conn)
 
 
 def selectTablaProductos():
@@ -350,7 +312,7 @@ def tablas():
    ('53242337F', 'Alfredo', 'Dominguez', 'M', '986172748', 'Garcia Barbon 77'),
    ('93758295N', 'Maria', 'Garzon', 'F', '986352378', 'Zaragoza 62'),
    ('58394052G', 'Eugenia', 'Val', 'F', '986642347', "Valencia 24"),
-   ('28503758L', 'Eduardo', 'Collazo', 'M', '986152764', 'Pintor Colmeiro') 
+   ('28503758L', 'Eduardo', 'Collazo', 'M', '986152764', 'Pintor Colmeiro 12') 
     """
 
     query_insert_produtos = """INSERT INTO produtos (id,produto,precio)

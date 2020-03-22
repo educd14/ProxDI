@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: ProxDI
+Version: 0.0.1
+Summary: Proyecto DI
+Home-page: UNKNOWN
+Author: Eduardo Collazo Dominguez
+Author-email: ecollazodominguez@danielcastelao.org
+License: GLP
+Description: UNKNOWN
+Platform: Unix
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Topic :: Software Development :: Libraries
+Classifier: License :: OSI Aproved :: GNU General Public License
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Operating System :: Linux Ubuntu

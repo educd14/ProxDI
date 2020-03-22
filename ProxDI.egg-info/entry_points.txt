@@ -1,0 +1,3 @@
+[gui_scripts]
+ProxDI = src.Inicio:main_func
+

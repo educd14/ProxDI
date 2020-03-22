@@ -4,11 +4,30 @@ from src.Clientes import XestionCli
 from src.ProdServ import ProdServi
 from src.SqliteBD import MethodsBD
 
+from gi.overrides.Gdk import Gdk
+
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 
 class VentanaPrincipal():
     def __init__(self):
+        css = '''
+        
+                    label {
+                    font: 20px Courier-bold;
+                    }
+                    button { 
+                    background:  #ffcc99;
+                    padding: 5px 10px;
+                    font: 14px Courier-bold;
+                    color: #000000;
+                    }
+                                        '''
+        cssProvider = Gtk.CssProvider()
+        cssProvider.load_from_data(bytes(css.encode()))
+        screen = Gdk.Screen.get_default()
+        styleContext = Gtk.StyleContext()
+        styleContext.add_provider_for_screen(screen, cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
         #Creación tablas BD
         MethodsBD.tablas()
 
@@ -17,7 +36,7 @@ class VentanaPrincipal():
         builder.add_from_file("formEntrada.glade")
 
         self.vEntrada = builder.get_object("vEntrada")
-        self.vEntrada.set_default_size(200, 150)
+        self.vEntrada.set_default_size(220, 150)
 
         self.btnClientes = builder.get_object("btnClientes")
         self.btnProdutos = builder.get_object("btnProdutos")
@@ -41,6 +60,7 @@ class VentanaPrincipal():
                   """
          XestionCli.Fiestra().show_all()
          self.vEntrada.set_visible(False)
+
     def on_btnProdutos_clicked(self, boton):
         """
                  Metodo para entrar al formulario Produtos e Servizos
@@ -51,9 +71,4 @@ class VentanaPrincipal():
         self.vEntrada.set_visible(False)
 
     def on_btnSalir_clicked(self, boton):
-        Gtk.main_quit()
-
-#ACTIVAMOS NUESTRA INTERFAZ GRÁFICA
-if __name__ == "__main__":
-    VentanaPrincipal()
-    Gtk.main()
+        exit(0)

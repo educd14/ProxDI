@@ -1,15 +1,22 @@
 import gi
+import os
 
 from src import Entrada
 from src.SqliteBD import MethodsBD
 
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import Table
+from reportlab.platypus import TableStyle
+import webbrowser as wb
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-#HEMOS QUITADO LA FUNCIÓN QUE HACE QUE AL CLICKAR EN "OCUPACIÓN" SE ORDENEN LAS CELDAS DE MOMENTO
 class Fiestra(Gtk.Window):
 
-    def __init__(self):  # constructor
+    def __init__(self):
         Gtk.Window.__init__(self, title="Xestión de Clientes")
         self.set_default_size(600, 400)
 
@@ -127,6 +134,8 @@ class Fiestra(Gtk.Window):
         self.vista2.set_hexpand(True)
         self. vista2.set_vexpand(True)
 
+        self.produtos2 = []
+
         for i in range(len(self.columnasP2)):
                 celda2 = Gtk.CellRendererText()
                 celda2.set_alignment(0.5, 0)
@@ -158,6 +167,7 @@ class Fiestra(Gtk.Window):
         self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
         self.btnVolver2.connect("clicked", self.on_btnVolver_clicked)
         self.btnAplicar.connect("clicked", self.on_btnAplicar_clicked)
+        self.btnFactura.connect("clicked", self.on_btnFactura_clicked)
 
         # Volver al inicio
 
@@ -186,7 +196,9 @@ class Fiestra(Gtk.Window):
 
             # OPCION AÑADIR
 
-            if (self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
+            idBDValid = self.idBDCheck(int(self.txtID.get_text()))
+
+            if (idBDValid == False and self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
                 MethodsBD.insertTablaProdutos(int(self.txtID.get_text()),self.txtProduto.get_text(),int(self.txtPrecio.get_text()))
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "Produto añadido Correctamente")
@@ -210,8 +222,14 @@ class Fiestra(Gtk.Window):
                                            "Introduce un nome válido")
                 dialog.run()
                 dialog.destroy()
-            else:
+            elif(idBDValid):
 
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                        "El ID del producto ya se encuentra en la base de datos")
+                dialog.run()
+                dialog.destroy()
+
+            else:
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
 
                                            "Introduce un precio válido")
@@ -222,8 +240,9 @@ class Fiestra(Gtk.Window):
 
             # OPCION MODIFICAR
 
+            idBDValid = self.idBDCheck(int(self.txtID.get_text()))
 
-            if (self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
+            if (idBDValid and self.txtID.get_text().isdigit() and self.txtProduto.get_text() != "" and self.txtPrecio.get_text().isdigit()):
                 MethodsBD.updateTablaProdutos(int(self.txtID.get_text()),self.txtProduto.get_text(),int(self.txtPrecio.get_text()))
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "Produto modificado Correctamente")
@@ -247,8 +266,13 @@ class Fiestra(Gtk.Window):
                                            "Introduce un nome válido")
                 dialog.run()
                 dialog.destroy()
-            else:
+            elif (idBDValid == False):
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                        "El ID del producto no se encuentra en la base de datos")
+                dialog.run()
+                dialog.destroy()
 
+            else:
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
 
                                            "Introduce un precio válido")
@@ -258,12 +282,20 @@ class Fiestra(Gtk.Window):
 
             #OPCION ELIMINAR
 
-            MethodsBD.deleteTablaProductos(self.txtID.get_text())
-            dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
-                                       "Produto Eliminado Correctamente")
-            dialog.run()
-            dialog.destroy()
-            self.tablaProdutoRefresh()
+            idBDValid = self.idBDCheck(int(self.txtID.get_text()))
+
+            if (idBDValid):
+                MethodsBD.deleteTablaProductos(self.txtID.get_text())
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                        "Produto eliminado correctamente")
+                dialog.run()
+                dialog.destroy()
+                self.tablaProdutoRefresh()
+            else:
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                        "El ID del producto no se encuentra en la base de datos")
+                dialog.run()
+                dialog.destroy()
 
     def tablaProdutoRefresh(self):
 
@@ -292,6 +324,93 @@ class Fiestra(Gtk.Window):
         for elemento in self.produtos2:
             self.modelo2.append(elemento)
 
-if __name__ == "__main__":
-    Fiestra()
-    Gtk.main()
+    def idBDCheck(self, id):
+        """Metodo que comprueba si la ID del GTKEntry está en la BD
+            :param id: id del produto
+            :return boolean: True o False en función del resultado.
+        """
+
+        produtosBD = MethodsBD.selectTablaProductos()
+        for produto in produtosBD:
+            if produto[0] == id:
+                return True
+
+        return False
+
+    def on_btnFactura_clicked(self, boton):
+        """Método que crea un pdf con la factura del cliente
+            y productos seleccionados.
+            :param boton: boton.
+            :return: No devuelve ningún parámetro.
+        """
+
+        if self.produtos2 is not None:
+            #Cogemos los datos a través del DNI del cliente
+
+            modeldni = self.cmbCliente.get_model()
+        dni = self.cmbCliente.get_active_iter()
+        datosCli = MethodsBD.selectTablaClientesDni(modeldni[dni][0])
+        cliente = []
+        for cli in datosCli:
+            cliente.append(["","","","",'Datos Cliente'])
+            cliente.append(["","","",'DNI: ', cli[0]])
+            cliente.append(["","","",'Nome: ', cli[1]])
+            cliente.append(["","","",'Apelidos: ', cli[2]])
+            cliente.append(["","","",'Direccion: ', cli[5],])
+            cliente.append([""])
+
+            #Hacemos el modelo para la tabla de la factura, los datos de productos ya lo tenemos recogidos en una lista
+
+            data = []
+            precioFinal = 0.0
+            data.append(["ID", "Nome", "Precio"])
+            for produto in self.produtos2:
+                data.append([produto[0], produto[1], str(produto[2]) + " €"])
+                precioFinal = precioFinal + produto[2]
+
+            data.append(['', 'PRECIO TOTAL:', str(precioFinal) + " €"])
+
+            # Creamos el PDF
+
+            file = 'Factura' + cli[0] + '.pdf'
+            diractual = os.getcwd()
+            pdf = SimpleDocTemplate(diractual + "/" + file, pagesize=letter)
+
+            # Agregamos datos del cliente
+
+            datCli = Table(cliente, colWidths=50, rowHeights=15)
+            numCols = len(cliente)
+            datCli.setStyle(TableStyle([
+                ('TEXTCOLOR', (0, 0), (4, numCols-1), colors.firebrick),
+
+                ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+            ]))
+
+            # Agregamos tabla de factura con los productos
+            tablaFact = Table(data, colWidths=100, rowHeights=25)
+
+            numCols = len(data)
+            tablaFact.setStyle(TableStyle([
+                ('TEXTCOLOR', (0, 0), (2, 0), colors.firebrick),
+
+                ('TEXTCOLOR', (0, numCols - 1), (2, numCols - 1), colors.red),
+
+                ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+
+                ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+
+                ('BOX', (0, 0), (-1, numCols - 2), 1, colors.black),
+
+                ('INNERGRID', (0, 0), (-1, numCols - 2), 0.5, colors.black)
+            ]))
+
+
+
+            # Añadimos los elementos al PDF
+            elementos = []
+            elementos.append(datCli)
+            elementos.append(tablaFact)
+            pdf.build(elementos)
+            wb.open_new(diractual + "/" + file)

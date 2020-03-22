@@ -1,15 +1,22 @@
 import gi
+import os
 
 from src import Entrada
 from src.SqliteBD import MethodsBD
 
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import Table
+from reportlab.platypus import TableStyle
+import webbrowser as wb
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-#HEMOS QUITADO LA FUNCIÓN QUE HACE QUE AL CLICKAR EN "OCUPACIÓN" SE ORDENEN LAS CELDAS DE MOMENTO
 class Fiestra(Gtk.Window):
 
-    def __init__(self):  # constructor
+    def __init__(self):
         Gtk.Window.__init__(self, title="Xestión de Clientes")
         self.set_default_size(600, 400)
 
@@ -104,6 +111,7 @@ class Fiestra(Gtk.Window):
         #Señales
         self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
         self.btnAplicar.connect("clicked", self.on_btnAplicar_clicked)
+        self.btnGuardar.connect("clicked", self.on_btnGuardar_clicked)
 
         # Volver al inicio
 
@@ -139,9 +147,10 @@ class Fiestra(Gtk.Window):
             dniValid = self.dniCheck(self.txtDni.get_text())
             sexValid = self.sexCheck(self.txtSexo.get_text())
             tlfValid = self.tlfCheck(self.txtTelefono.get_text())
+            dniBDValid = self.dniBDCheck(self.txtDni.get_text())
 
 
-            if (dniValid and sexValid and tlfValid and self.txtNome.get_text() != "" and self.txtApelido.get_text() != "" and self.txtDireccion.get_text() != ""):
+            if (dniBDValid == False and dniValid and sexValid and tlfValid and self.txtNome.get_text() != "" and self.txtApelido.get_text() != "" and self.txtDireccion.get_text() != ""):
                 MethodsBD.insertTablaClientes(self.txtDni.get_text(), self.txtNome.get_text(), self.txtApelido.get_text(), self.txtSexo.get_text(), self.txtTelefono.get_text(), self.txtDireccion.get_text())
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "Cliente añadido Correctamente")
@@ -190,11 +199,16 @@ class Fiestra(Gtk.Window):
                 dialog.run()
                 dialog.destroy()
 
-            else:
+            elif (dniValid == False):
 
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
 
                                            "Introduce un DNI válido")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "El DNI ya se encuentra en la Base de datos")
                 dialog.run()
                 dialog.destroy()
 
@@ -205,8 +219,9 @@ class Fiestra(Gtk.Window):
             dniValid = self.dniCheck(self.txtDni.get_text())
             sexValid = self.sexCheck(self.txtSexo.get_text())
             tlfValid = self.tlfCheck(self.txtTelefono.get_text())
+            dniBDValid = self.dniBDCheck(self.txtDni.get_text())
 
-            if (dniValid and sexValid and tlfValid and self.txtNome.get_text() != "" and self.txtApelido.get_text() != "" and self.txtDireccion.get_text() != ""):
+            if (dniBDValid and dniValid and sexValid and tlfValid and self.txtNome.get_text() != "" and self.txtApelido.get_text() != "" and self.txtDireccion.get_text() != ""):
                         MethodsBD.updateTablaClientes(self.txtDni.get_text(), self.txtNome.get_text(), self.txtApelido.get_text(), self.txtSexo.get_text(), self.txtTelefono.get_text(), self.txtDireccion.get_text())
                         dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                                    "Cliente modificado correctamente")
@@ -253,11 +268,16 @@ class Fiestra(Gtk.Window):
                 dialog.run()
                 dialog.destroy()
 
-            else:
+            elif (dniValid == False):
 
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.WARNING, Gtk.ButtonsType.OK,
 
                                            "Introduce un DNI válido")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "El DNI no se encuentra en la Base de datos")
                 dialog.run()
                 dialog.destroy()
 
@@ -266,17 +286,23 @@ class Fiestra(Gtk.Window):
             #OPCION ELIMINAR
 
             dniValid = self.dniCheck(self.txtDni.get_text())
+            dniBDValid = self.dniBDCheck(self.txtDni.get_text())
 
-            if (dniValid):
+            if (dniValid and dniBDValid):
                 MethodsBD.deleteTablaClientes(self.txtDni.get_text())
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                        "Cliente eliminado correctamente")
                 dialog.run()
                 dialog.destroy()
                 self.tablaClienteRefresh()
-            else:
+            elif (dniValid == False):
                 dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                        "Introduzca un DNI correcto")
+                dialog.run()
+                dialog.destroy()
+            else:
+                dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                       "El DNI no se encuentra en la Base de datos")
                 dialog.run()
                 dialog.destroy()
 
@@ -348,7 +374,76 @@ class Fiestra(Gtk.Window):
                 pass
         return False
 
+    def dniBDCheck(self, dni):
+        """Metodo que comprueba si el DNI del GTKEntry está en la BD
+            :param dni: dni de la persona
+            :return boolean: True o False en función del resultado.
+        """
 
-if __name__ == "__main__":
-    Fiestra()
-    Gtk.main()
+        clientesBD = MethodsBD.selectTablaClientes()
+        for cliente in clientesBD:
+            if cliente[0] == dni:
+                return True
+
+        return False
+
+    def on_btnGuardar_clicked(self, boton):
+        """Método que crea un pdf con la lista de clientes.
+            :param boton: boton.
+            :return: No devuelve ningún parámetro.
+        """
+        #Cogemos los datos
+
+        data = []
+        data.append(["DNI", "Nombre", "Apellidos", "Sexo", "Telefono", "Direccion"])
+        clientes = MethodsBD.selectTablaClientes()
+        for cliente in clientes:
+            data.append([cliente[0], cliente[1], cliente[2], cliente[3], cliente[4], cliente[5]])
+
+        # Creamos el PDF
+        file = 'ListaClientes.pdf'
+        diractual = os.getcwd()
+        pdf = SimpleDocTemplate(diractual + "/" + file, pagesize=letter)
+
+        # Creamos una tabla
+        table = Table(data)
+        elementos = []
+        elementos.append(table)
+
+        # Estilamos la tabla
+
+        style = TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.burlywood),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Courier-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 20),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 15),
+        ])
+        table.setStyle(style)
+
+        # Alternamos colores de las filas
+
+        numCols = len(data)
+        for i in range(1, numCols):
+            if i % 2 == 0:
+                bc = colors.lightgrey
+            else:
+                bc = colors.ghostwhite
+            colorCol = TableStyle([('BACKGROUND', (0, i), (-1, i), bc)])
+            table.setStyle(colorCol)
+
+        # Añadimos bordes a la tabla
+
+        bordes = TableStyle(
+            [
+                ('BOX', (0, 0), (-1, -1), 1, colors.black),
+                ('LINEBEFORE', (0, 0), (-1, numCols), 1, colors.black),
+                ('LINEABOVE', (0, 0), (-1, 1), 1, colors.black)
+            ]
+        )
+        table.setStyle(bordes)
+        pdf.build(elementos)
+        wb.open_new(diractual + "/" + file)
+
+
