@@ -161,13 +161,13 @@ class Fiestra(Gtk.Window):
 
 
         self.show_all()
-        self.connect("destroy", Gtk.main_quit)
 
         # Señales
         self.btnVolver.connect("clicked", self.on_btnVolver_clicked)
         self.btnVolver2.connect("clicked", self.on_btnVolver_clicked)
         self.btnAplicar.connect("clicked", self.on_btnAplicar_clicked)
         self.btnFactura.connect("clicked", self.on_btnFactura_clicked)
+        self.connect("destroy", self.on_btnSalir_clicked)
 
         # Volver al inicio
 
@@ -414,3 +414,6 @@ class Fiestra(Gtk.Window):
             elementos.append(tablaFact)
             pdf.build(elementos)
             wb.open_new(diractual + "/" + file)
+
+    def on_btnSalir_clicked(self, boton):
+        exit(0)

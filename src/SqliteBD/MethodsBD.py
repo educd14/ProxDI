@@ -22,9 +22,10 @@ def disconnect(conn):
         :return: No devuelve ningún parámetro.
         """
     try:
-        conn.close()
+        if conn is not None:
+            conn.close()
     except conn.DatabaseError as erroSQL:
-        print("Error al cerrar conexión."+ erroSQL)
+        print("Error al cerrar conexión.")
 
 
 def query(conn, query):
@@ -190,10 +191,10 @@ def updateTablaClientes(dni, nome, apelido, sexo, telefono, direccion):
             conn.commit()
 
         except conn.OperationalError as e:
-            print("Error "+e)
+            print(+e)
 
         except conn.DatabaseError as e2:
-            print("Error"+e2)
+            print(e2)
 
         finally:
             cursor.close()
@@ -215,10 +216,10 @@ def deleteTablaClientes(dni):
         print("Eliminado")
 
     except conn.OperationalError as err:
-        print("Error "+err)
+        print(err)
 
     except conn.DatabaseError as err2:
-        print("Error"+err2)
+        print(err2)
 
     finally:
         cursor.close()
@@ -259,10 +260,10 @@ def selectTablaClientesDni(dni):
         datos = cursor.fetchall()
         return datos
     except conn.OperationalError as err:
-        print("Error "+err)
+        print(err)
 
     except conn.DatabaseError as err2:
-        print("Error"+err2)
+        print(err2)
 
     finally:
         cursor.close()
@@ -335,4 +336,4 @@ def tablas():
         disconnect(conn)
     else:
         print("Fallo en la conexión.")
-    disconnect(conn)
+        disconnect(conn)

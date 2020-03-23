@@ -46,7 +46,7 @@ class VentanaPrincipal():
         self.btnClientes.connect("clicked", self.on_btnClientes_clicked)
         self.btnProdutos.connect("clicked", self.on_btnProdutos_clicked)
         self.btnSalir.connect("clicked", self.on_btnSalir_clicked)
-        self.vEntrada.connect("destroy", Gtk.main_quit)
+        self.vEntrada.connect("destroy", self.on_btnSalir_clicked)
 
         #Y mostramos toda la ventana "main"
         self.vEntrada.show_all()
