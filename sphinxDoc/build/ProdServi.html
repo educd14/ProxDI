@@ -1,0 +1,159 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Productos y servicios &#8212; documentación de ProxDI - 0.1</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Métodos Base de datos" href="MethodsBD.html" />
+    <link rel="prev" title="Gestión de Clientes" href="XestionCli.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-src.ProdServ.ProdServi">
+<span id="productos-y-servicios"></span><h1>Productos y servicios<a class="headerlink" href="#module-src.ProdServ.ProdServi" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="class">
+<dt id="src.ProdServ.ProdServi.Fiestra">
+<em class="property">class </em><code class="descclassname">src.ProdServ.ProdServi.</code><code class="descname">Fiestra</code><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">gi.overrides.Gtk.Window</span></code></p>
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.idBDCheck">
+<code class="descname">idBDCheck</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.idBDCheck" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que comprueba si la ID del GTKEntry está en la BD
+:param id: id del produto
+:return boolean: True o False en función del resultado.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.listaFactura">
+<code class="descname">listaFactura</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.listaFactura" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_btnAplicar_clicked">
+<code class="descname">on_btnAplicar_clicked</code><span class="sig-paren">(</span><em>boton</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_btnAplicar_clicked" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_btnFactura_clicked">
+<code class="descname">on_btnFactura_clicked</code><span class="sig-paren">(</span><em>boton</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_btnFactura_clicked" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Método que crea un pdf con la factura del cliente
+y productos seleccionados.
+:param boton: boton.
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_btnSalir_clicked">
+<code class="descname">on_btnSalir_clicked</code><span class="sig-paren">(</span><em>boton</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_btnSalir_clicked" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_btnVolver_clicked">
+<code class="descname">on_btnVolver_clicked</code><span class="sig-paren">(</span><em>boton</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_btnVolver_clicked" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Metodo que vuelve al formulario de inicio.
+:param widget: boton
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_celdaCheck_toggled">
+<code class="descname">on_celdaCheck_toggled</code><span class="sig-paren">(</span><em>control</em>, <em>fila</em>, <em>modelo</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_celdaCheck_toggled" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.on_vista_changed">
+<code class="descname">on_vista_changed</code><span class="sig-paren">(</span><em>seleccion</em><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.on_vista_changed" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="src.ProdServ.ProdServi.Fiestra.tablaProdutoRefresh">
+<code class="descname">tablaProdutoRefresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.ProdServ.ProdServi.Fiestra.tablaProdutoRefresh" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="XestionCli.html" title="capítulo anterior">Gestión de Clientes</a></li>
+      <li>Next: <a href="MethodsBD.html" title="próximo capítulo">Métodos Base de datos</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ProdServi.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Eduardo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/ProdServi.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

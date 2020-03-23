@@ -1,0 +1,212 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Métodos Base de datos &#8212; documentación de ProxDI - 0.1</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="prev" title="Productos y servicios" href="ProdServi.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-src.SqliteBD.MethodsBD">
+<span id="metodos-base-de-datos"></span><h1>Métodos Base de datos<a class="headerlink" href="#module-src.SqliteBD.MethodsBD" title="Enlazar permanentemente con este título">¶</a></h1>
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.connect">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.connect" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Crea conexion a base de datos.
+:param: No recibe ningún parámetro.
+:return: Object Connection o null</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.deleteTablaClientes">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">deleteTablaClientes</code><span class="sig-paren">(</span><em>dni</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.deleteTablaClientes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Elimina un cliente dado su DNI.
+:param dni: DNI del cliente a eliminar.
+:return: Ningún parámetro es devuelto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.deleteTablaProductos">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">deleteTablaProductos</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.deleteTablaProductos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Elimina el produto dado el id
+:param id: id del produto.
+:return: Ningún parámetro devuelto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.disconnect">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">disconnect</code><span class="sig-paren">(</span><em>conn</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.disconnect" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>cierra la conexión a base de datos.
+:param conn: Conexion de la base de datos.
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.insertTablaClientes">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">insertTablaClientes</code><span class="sig-paren">(</span><em>dni</em>, <em>nome</em>, <em>apelido</em>, <em>sexo</em>, <em>telefono</em>, <em>direccion</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.insertTablaClientes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Inserta una nueva fila en la tabla Clientes.
+:param dni: Dni
+:param nome: Nome
+:param apelido: Apelido
+:param sexo: Sexo
+:param telefono: Telefono
+:param direccion: Direccion
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.insertTablaProdutos">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">insertTablaProdutos</code><span class="sig-paren">(</span><em>id</em>, <em>produto</em>, <em>precio</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.insertTablaProdutos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Inserta una nueva fila en la tabla Produtos.
+:param id: id
+:param produto: produto
+:param precio: Precio
+:return: Ningún parámetro devuelto.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.query">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">query</code><span class="sig-paren">(</span><em>conn</em>, <em>query</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.query" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Query para crear tablas o insertar datos
+:param conn: Object Connection
+:param query: statement
+:return: No devuelve ningún prámetro.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.selectTablaClientes">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">selectTablaClientes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.selectTablaClientes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Consulta de todos los clientes.
+:param: No recibe ningún parámetro.
+:return: Lista de todos los clientes existentes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.selectTablaClientesDni">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">selectTablaClientesDni</code><span class="sig-paren">(</span><em>dni</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.selectTablaClientesDni" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Consulta de cliente a través del DNI.
+:param dni: DNI del cliente que se quiere encontrar.
+:return: Lista de datos del cliente.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.selectTablaProductos">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">selectTablaProductos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.selectTablaProductos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Consulta todos los produtos.
+:param: No recibe ningún parámetro.
+:return: Lista de todos los produtos.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.tablas">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">tablas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.tablas" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.updateTablaClientes">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">updateTablaClientes</code><span class="sig-paren">(</span><em>dni</em>, <em>nome</em>, <em>apelido</em>, <em>sexo</em>, <em>telefono</em>, <em>direccion</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.updateTablaClientes" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Modifica los datos de un cliente existente dado la clave primaria DNI.
+:param dni: Dni
+:param nome: Nome
+:param apelido: Apelido
+:param sexo: Sexo
+:param telefono: Telefono
+:param direccion: Direccion
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.SqliteBD.MethodsBD.updateTablaProdutos">
+<code class="descclassname">src.SqliteBD.MethodsBD.</code><code class="descname">updateTablaProdutos</code><span class="sig-paren">(</span><em>id</em>, <em>produto</em>, <em>precio</em><span class="sig-paren">)</span><a class="headerlink" href="#src.SqliteBD.MethodsBD.updateTablaProdutos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Modifica los datos de un produto existente dado la clave primaria ID.
+:param id: id
+:param produto: produto
+:param precio: precio
+:return: No devuelve ningún parámetro.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="ProdServi.html" title="capítulo anterior">Productos y servicios</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Esta página</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/MethodsBD.rst.txt"
+            rel="nofollow">Mostrar el código</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Eduardo.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/MethodsBD.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -16,8 +16,26 @@ from gi.repository import Gtk
 
 class Fiestra(Gtk.Window):
 
+    """Ventana de Productos y Servicios.
+            **Métodos:**
+                - __init__
+                - on_btnVolver_clicked
+                - on_vista_changed
+                - on_btnAplicar_clicked
+                - tablaProdutoRefresh
+                - on_celdaCheck_toggled
+                - listaFactura
+                - idBDCheck
+                - on_btnFactura_clicked
+                - on_btnSalir_clicked
+            """
+
     def __init__(self):
-        Gtk.Window.__init__(self, title="Xestión de Clientes")
+
+        """Inicializa la ventana de Productos y Servicios con la interfaz.
+        """
+
+        Gtk.Window.__init__(self, title="Produtos e Servizos")
         self.set_default_size(600, 400)
 
         self.notebook = Gtk.Notebook();
@@ -27,7 +45,7 @@ class Fiestra(Gtk.Window):
 
         boxV = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        """TABLA PRODUTOS"""
+        #TABLA PRODUTOS
 
         self.columnasP = ["ID", "Produto", "Precio(€)",""]
         self.modeloP = Gtk.ListStore(int, str, int,bool)
@@ -180,6 +198,10 @@ class Fiestra(Gtk.Window):
         self.set_visible(False)
 
     def on_vista_changed(self, seleccion):
+        """Metodo que al clickar en datos del TreeView se muestren en los entries
+                :param seleccion: Datos seleccionados
+                :return: No devuelve ningún parámetro.
+        """
         (modelo, punteiro) = seleccion.get_selected()
 
         if punteiro is not None:
@@ -189,6 +211,11 @@ class Fiestra(Gtk.Window):
             self.txtPrecio.set_text(str(modelo[punteiro][2]))
 
     def on_btnAplicar_clicked(self, boton):
+        """Metodo que según la opción del ComboBox, añade,
+        modifica o elimina un valor de la tabla produtos.
+                :param boton: boton
+                :return: No devuelve ningún parámetro.
+        """
         modAcc = self.cmbAccion.get_model()
         indice = self.cmbAccion.get_active_iter()
 
@@ -298,6 +325,10 @@ class Fiestra(Gtk.Window):
                 dialog.destroy()
 
     def tablaProdutoRefresh(self):
+        """Metodo actualiza la tabla produtos
+                :param: No recibe parámetros.
+                :return: No devuelve ningún parámetro.
+        """
 
         self.modeloP.clear()
         self.produtos = []
@@ -310,11 +341,23 @@ class Fiestra(Gtk.Window):
             self.modeloP.append(elemento)
 
     def on_celdaCheck_toggled(self, control, fila, modelo):
+        """Metodo que activa o desactiva la casilla de seleccion
+                :param control: controlador
+                :param fila: fila del TreeView
+                :param modelo: modelo del TreeView
+                :return: No devuelve ningún parámetro.
+        """
         modelo[fila][3] = not modelo[fila][3]
         self.listaFactura()
 
 
     def listaFactura(self):
+        """Metodo que añade los produtos con la casilla
+            seleccionada a un TreeView diferente para
+            hacer una lista en la Factura.
+                :param: No recibe parámetros.
+                :return: No devuelve ningún parámetro.
+        """
         self.modelo2.clear()
         self.produtos2 = []
         for produto in self.modeloP:
@@ -416,4 +459,9 @@ class Fiestra(Gtk.Window):
             wb.open_new(diractual + "/" + file)
 
     def on_btnSalir_clicked(self, boton):
+        """
+                 Metodo para cerrar el programa
+                 :param boton: boton
+                 :return: No devuelve ningún parámetro.
+                 """
         exit(0)

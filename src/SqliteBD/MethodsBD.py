@@ -1,6 +1,10 @@
 import sqlite3
 from sqlite3 import Error
 
+"""
+Clase donde se encuentran las funciones/metodos
+de manipulación de la base de datos
+"""
 
 def connect():
     """Crea conexion a base de datos.
@@ -17,7 +21,7 @@ def connect():
 
 
 def disconnect(conn):
-    """cierra la conexión a base de datos.
+    """Cierra la conexión a base de datos.
         :param conn: Conexion de la base de datos.
         :return: No devuelve ningún parámetro.
         """
@@ -292,6 +296,10 @@ def selectTablaProductos():
 
 
 def tablas():
+    """Crea las tablas y las inserciones necesarias.
+    :param: No recibe ningún parámetro.
+    :return: No devuelve ningún parámetro.
+    """
     query_tabla_clientes = """CREATE TABLE IF NOT EXISTS clientes(
                                      dni TEXT PRIMARY KEY, 
                                      nome TEXT NOT NULL, 

@@ -15,15 +15,31 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 class Fiestra(Gtk.Window):
+    """Ventana de Xestión de Clientes.
+            **Métodos:**
+                - __init__
+                - on_btnVolver_clicked
+                - on_vista_changed
+                - on_btnAplicar_clicked
+                - tablaClienteRefresh
+                - dniCheck
+                - tlfCheck
+                - sexCheck
+                - dniBDCheck
+                - on_btnGuardar_clicked
+                - on_btnSalir_clicked
+    """
 
     def __init__(self):
+        """Inicializa la ventana de Gestión de Clientes con la interfaz.
+        """
+
         Gtk.Window.__init__(self, title="Xestión de Clientes")
         self.set_default_size(600, 400)
 
         boxV = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
 
-        #Refrescamos tabla clientes
-        """TABLA CLIENTES"""
+        #TABLA CLIENTES
 
         self.columnasC = ["DNI", "Nome", "Apelido", "Sexo", "Telefono", "Direccion"]
         self.modeloC = Gtk.ListStore(str, str, str, str, str, str)
@@ -113,17 +129,20 @@ class Fiestra(Gtk.Window):
         self.btnGuardar.connect("clicked", self.on_btnGuardar_clicked)
         self.connect("destroy", self.on_btnSalir_clicked)
 
-        # Volver al inicio
 
     def on_btnVolver_clicked(self, boton):
         """Metodo que vuelve al formulario de inicio.
-                :param widget: boton
-                :return: No devuelve ningún parámetro.
+            :param widget: boton
+            :return: No devuelve ningún parámetro.
         """
         Entrada.VentanaPrincipal().vEntrada.show_all()
         self.set_visible(False)
 
     def on_vista_changed(self, seleccion):
+        """Metodo que al clickar en datos del TreeView se muestren en los entries
+            :param seleccion: Datos seleccionados
+            :return: No devuelve ningún parámetro.
+        """
         (modelo, punteiro) = seleccion.get_selected()
 
         if punteiro is not None:
@@ -136,6 +155,11 @@ class Fiestra(Gtk.Window):
             self.txtDireccion.set_text((modelo[punteiro][5]))
 
     def on_btnAplicar_clicked(self, boton):
+        """Metodo que según la opción del ComboBox, añade,
+            modifica o elimina un valor de la tabla clientes.
+            :param boton: boton
+            :return: No devuelve ningún parámetro.
+        """
         modAcc = self.cmbAccion.get_model()
         indice = self.cmbAccion.get_active_iter()
 
@@ -307,7 +331,10 @@ class Fiestra(Gtk.Window):
                 dialog.destroy()
 
     def tablaClienteRefresh(self):
-
+        """Metodo actualiza la tabla clientes
+            :param: No recibe parámetros.
+            :return: No devuelve ningún parámetro.
+        """
 
         self.modeloC.clear()
         self.clientes = []
@@ -321,11 +348,9 @@ class Fiestra(Gtk.Window):
 
 
     def dniCheck(self, dni):
-        """ Nos indica si un DNI es valido.
-           Si el valor es válido devuelve True,
-           sino devuelve False
+        """Nos indica si un DNI es valido.
             :param dni: Dni de la persona.
-            :return boolean: true o false en función del resultado
+            :return boolean: true o false en función del resultado.
         """
 
         if len(dni) == 9:
@@ -375,8 +400,8 @@ class Fiestra(Gtk.Window):
         return False
 
     def dniBDCheck(self, dni):
-        """Metodo que comprueba si el DNI del GTKEntry está en la BD
-            :param dni: dni de la persona
+        """Metodo que comprueba si el DNI del GTKEntry esta en la BD.
+            :param dni: dni de la persona.
             :return boolean: True o False en función del resultado.
         """
 
@@ -448,4 +473,8 @@ class Fiestra(Gtk.Window):
 
 
     def on_btnSalir_clicked(self, boton):
+        """Metodo para cerrar el programa
+            :param boton: boton
+            :return: No devuelve ningún parámetro.
+        """
         exit(0)

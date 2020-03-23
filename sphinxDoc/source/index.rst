@@ -10,7 +10,10 @@ Welcome to ProxDI's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   Entrada
+   XestionCli
+   ProdServi
+   MethodsBD
 
 Indices and tables
 ==================
