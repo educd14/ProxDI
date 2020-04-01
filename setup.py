@@ -19,7 +19,7 @@ setup(
     package_data={
         "": ["*.txt", "*.rst", "*.glade", "*.py"],
         "res": ["*"],
-        "src": ["*"],
+        "src": ["*", "SqliteBD/proyectotienda.db"],
     },
     entry_points={
         "gui_scripts": [

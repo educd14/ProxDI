@@ -19,3 +19,4 @@ src/ProdServ/ProdServi.py
 src/ProdServ/__init__.py
 src/SqliteBD/MethodsBD.py
 src/SqliteBD/__init__.py
+src/SqliteBD/proyectotienda.db

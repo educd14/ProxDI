@@ -1,4 +1,5 @@
 import sqlite3
+import os
 from sqlite3 import Error
 
 """
@@ -13,7 +14,9 @@ def connect():
     """
     conn = None
     try:
-        conn = sqlite3.connect("./SqliteBD/proyectotienda.db")
+        path = os.path.dirname(os.path.abspath(__file__))
+        db = os.path.join(path, 'proyectotienda.db')
+        conn = sqlite3.connect(db)
         return conn
     except Error as e:
         print(e)

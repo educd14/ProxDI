@@ -1,4 +1,5 @@
 import gi
+import os
 
 from src.Clientes import XestionCli
 from src.ProdServ import ProdServi
@@ -48,7 +49,9 @@ class VentanaPrincipal():
         builder = Gtk.Builder()
 
         #Asignamos a nuestro builder el archivo de nuestro proyecto Glade
-        builder.add_from_file("formEntrada.glade")
+        path = os.path.dirname(os.path.realpath(__file__))
+        file = os.path.join(path, 'formEntrada.glade')
+        builder.add_from_file(file)
 
         self.vEntrada = builder.get_object("vEntrada")
         self.vEntrada.set_default_size(220, 150)
